@@ -16,11 +16,6 @@ const SYMBOLS_VALUE={
     D:2
 
 }
-
-
-
-
-
 const deposit = ()=> {
     while(true){
         const depositAmount = prompt("Enter a deposit amount:");
@@ -35,8 +30,6 @@ const deposit = ()=> {
 
     }
     
-
-
 };
 
 const getNumberofLines=() =>{
@@ -68,7 +61,6 @@ const getBet =(balance,lines)=>{
 
     }
     
-
 };
 
 const spin =()=>{
@@ -95,11 +87,73 @@ const spin =()=>{
    }
    return reels; 
 };
-const transpose =()=>{
+const transpose =(reels)=>{
+    const rows=[];
+    for(let i=0;i<Rows;i++){
+        rows.push([]);
+        for(let j=0;j<Cols;j++){
+            rows[i].push(reels[j][i]);
+
+        }
+    }
+    return rows;
+};
+const printRows=(rows)=>{
+    for(const row of rows){
+        let rowstring="";
+        for(const[i,symbol]of row.entries()){
+            rowstring +=symbol;
+            if (i!=row.length-1){
+                rowstring += " | ";
+
+            }
+        }
+        console.log(rowstring);
+    }
+};
+const getWinning=(rows,bet,lines)=>{
+    let winnings=0;
+    for(let row=0;row<lines;row++){
+        const symbols=rows[row];
+        let allSame=true;
+
+        for(const symbol of symbols){
+            if(symbol!=symbols[0]){
+                allSame=false;
+                break;
+
+            }
+        }
+        if(allSame){
+            winnings +=bet*SYMBOLS_VALUE[symbols[0]];
+        }
+
+    }
+    return winnings;
 
 };
+const game=()=>{
+    let balance= deposit();
+    while(true){
+        console.log("You have a balance of ,$"+balance);
+        const numberLines=getNumberofLines();
+        const numberBet=getBet(balance,numberLines);
+        balance -= numberBet*numberLines;
+        const reels=spin();
+        const rows=transpose(reels);
+        printRows(rows);
+        const winnigs=getWinning(rows,numberBet,numberLines);
+        balance +=winnigs;
+        console.log("You won ,$"+winnigs.toString())
+        if(balance <=0){
+            console.log("You ran out of money.");
+            break;
+        }
+        const playAgain=prompt("Do you want to play again? (Y/N)");
+        if (playAgain !="Y")break;
+            
+    }
 
-let balance= deposit();
-const numberLines=getNumberofLines();
-const numberBet=getBet(balance,numberLines);
-const reels=spin();
+};
+game();
+
