@@ -1,4 +1,4 @@
-// downloading package
+
 const prompt = require("prompt-sync")();
 const Rows=3;
 const Cols=3;
